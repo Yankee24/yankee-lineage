@@ -3,15 +3,11 @@ package com.yankee.lineage;
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLStatement;
-import com.alibaba.druid.sql.ast.statement.*;
-import com.alibaba.druid.sql.visitor.SchemaStatVisitor;
-import com.alibaba.druid.stat.TableStat;
-import com.alibaba.druid.stat.TableStat.Name;
+import com.alibaba.druid.sql.ast.statement.SQLCreateStatement;
+import com.alibaba.druid.sql.ast.statement.SQLInsertStatement;
 import com.alibaba.druid.util.JdbcConstants;
 
 import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
 
 /**
  * @author Yankee
@@ -45,47 +41,6 @@ public class MySQLParse {
                 System.out.println("insert:" + createStatement);
             }
         }
-    }
-
-    public static void getFromTo(String sql) {
-        List<SQLStatement> statements = SQLUtils.parseStatements(sql, JdbcConstants.MYSQL);
-        TreeSet<String> fromSet = new TreeSet<>();
-        TreeSet<String> toSet = new TreeSet<>();
-
-        String database = "";
-        for (SQLStatement statement : statements) {
-            SchemaStatVisitor statVisitor = SQLUtils.createSchemaStatVisitor(JdbcConstants.MYSQL);
-            if (statement instanceof SQLUseStatement) {
-                database = ((SQLUseStatement) statement).getDatabase().getSimpleName().toUpperCase();
-            }
-            statement.accept(statVisitor);
-            Map<Name, TableStat> tables = statVisitor.getTables();
-            if (tables != null) {
-                final String db = database;
-                tables.forEach((tableName, stat) -> {
-                    if (stat.getCreateCount() > 0 || stat.getInsertCount() > 0) {
-                        String to = tableName.getName().toUpperCase();
-                        if (!to.contains(".")) {
-                            to = db + "." + to;
-                        }
-                        toSet.add(to);
-                    } else if (stat.getSelectCount() > 0) {
-                        String from = tableName.getName().toUpperCase();
-                        if (!from.contains(".")) {
-                            from = db + "." + from;
-                        }
-                        fromSet.add(from);
-                    }
-                });
-            }
-        }
-
-        for (SQLStatement statement : statements) {
-            SchemaStatVisitor statVisitor = SQLUtils.createSchemaStatVisitor(JdbcConstants.MYSQL);
-            statement.accept(statVisitor);
-            System.out.println(statVisitor.getColumns());
-        }
-
     }
 
     public static void main(String[] args) {
