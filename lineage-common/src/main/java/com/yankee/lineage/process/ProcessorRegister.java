@@ -37,7 +37,7 @@ public class ProcessorRegister {
     private static final Map<Type, SQLTableSourceProcessor> TABLE_SOURCE_PROCESSOR_MAP = new HashMap<>();
 
     /**
-     * SQLExpr处理器
+     * SQLExpr 处理器
      */
     private static final Map<Type, SQLExprProcessor> TABLE_SQL_EXPR_MAP = new HashMap<>();
 
