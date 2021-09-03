@@ -86,7 +86,6 @@ public class MySQLParse {
             System.out.println(statVisitor.getColumns());
         }
 
-        System.out.println(fromSet);
     }
 
     public static void main(String[] args) {
