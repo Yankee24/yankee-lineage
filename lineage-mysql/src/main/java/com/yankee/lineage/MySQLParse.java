@@ -87,7 +87,6 @@ public class MySQLParse {
         }
 
         System.out.println(fromSet);
-        System.out.println(toSet);
     }
 
     public static void main(String[] args) {
